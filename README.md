@@ -1,4 +1,6 @@
-SmHodule - using the new ESP8266 SoC
+SmHodule
+
+SmHodule is using the new Wifi enabled ESP8266 SoC.
 
 SmHodule is a Smart Home module for the Internet of Things.
 
