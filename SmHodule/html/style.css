@@ -1,0 +1,158 @@
+body {
+  background-color: #ddd;
+  color: #222;
+  font-family: Helvetica;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+#header h1 {
+  margin: 0;
+  padding: 0;
+}
+
+#header h1 a {
+  background-color:#ccc;
+  border-bottom: 1px solid #666;
+  color: #222;
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 0;
+  text-align: center;
+  text-decoration: none;
+}
+
+#footer {
+  background-color:#ccc;
+  border-bottom: 1px solid #666;
+  color: #222;
+  display: block;
+}
+
+#menu ul {
+  list-style: none;
+  margin: 10px;
+  padding: 0;
+}
+
+#menu ul li a{
+  background-color:#FFF;
+  border: 1px solid #999;
+  color: #222;
+  display: block;
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: -1px;
+  padding: 12px 10px;
+  text-decoration: none;
+}
+
+#main {
+	background-color: #ddd;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 2px solid #000000;
+	
+	margin: 0 auto;
+	padding: 10px
+}
+
+#navcontainer
+{
+background: #ddd;
+margin: 0 auto;
+padding: 0 0 0 0;
+font-family: Helvetica;;
+text-transform: lowercase;
+}
+
+/* to stretch the container div to contain floated list */
+#navcontainer:after
+{
+content: ".";
+display: block;
+line-height: 1px;
+font-size: 1px;
+clear: both;
+}
+
+ul#navlist
+{
+list-style: none;
+padding: 0;
+margin: 0 auto;
+width: 100%;
+font-size: 0.8em;
+}
+
+ul#navlist li
+{
+display: block;
+float: left;
+width: 33.33%;
+margin: 0;
+padding: 0;
+}
+
+ul#navlist li a
+{
+display: block;
+width: 10%;
+padding: 0.5em;
+border-width: 1px;
+border-color: #ffe #aaa #ccc #fff;
+border-style: solid;
+color: #777;
+text-decoration: none;
+background: #ddd;
+}
+
+#navcontainer>ul#navlist li a { width: auto; }
+
+ul#navlist li#active a
+{
+background: #eee;
+color: #800000;
+}
+
+ul#navlist li a:hover, ul#navlist li#active a:hover
+{
+color: #800000;
+background: transparent;
+border-color: #aaa #fff #fff #ccc;
+}
+
+form.html5-form {
+  background-color: #f8f8f8;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  margin: 0 0px;
+}
+
+.radio-toolbar input[type="radio"] {
+    display:none; 
+}
+
+.radio-toolbar label {
+    display:inline-block;
+    background-color:#ddd;
+    padding:4px 11px;
+    font-family:Arial;
+    font-size:16px;
+}
+
+.radio-toolbar input[type="radio"]:checked + label { 
+    background-color:#bbb;
+}
+
+
+.icon {
+	background-image: url("/setup/icons.png");
+	background-color: transparent;
+	width: 32px;
+	height: 32px;
+	display: inline-block;
+}
