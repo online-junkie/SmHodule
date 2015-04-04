@@ -12,7 +12,7 @@ Feel free to expand SmHodule and add your own ideas.
 
 ## Compile
 
-Compile the code and then make clean, make html, make all, make flashall
+Compile the code, then: make clean, make html, make all, make flashall
  
 For first time setup keep GPIO15 pulled to ground for 35 seconds.
 After first time configuration the module reboots and starts as an Access Point. Connect your wifi network to the new AP and use the default AP IP: 192.168.4.1 in your browser to access the module. Note: Your local router has to be DHCP enabled.
