@@ -1,4 +1,6 @@
-SmHodule is using the new Wifi SoC ESP8266 a System on Chip as powerful as an Arduino.
+# SmHodule
+
+SmHodule is using the Wifi SoC ESP8266, the ESP8266 is a System on Chip and is as powerful as an Arduino.
 
 SmHodule = Smart Home module for the Internet of Things.
 
@@ -7,6 +9,8 @@ This module is based on a set of examples found in the Internet about ESP8266 an
 The Setup data is cached in the modules flash memory.
 
 Feel free to expand SmHodule and add your own ideas.
+
+## Compile
 
 Compile the code and then make clean, make html, make all, make flashall
  
