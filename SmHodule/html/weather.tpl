@@ -4,7 +4,7 @@
 </head>
 <body>
 <div id="header">
-<h1><a href="index.htm">SmHodule&#039;s for the IoT</a></h1>
+<h1><a href="index.tpl">SmHodule&#039;s for the IoT</a></h1>
 </div>
 <div id="main">
 <h2>SmHodule</h2>

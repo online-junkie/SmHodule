@@ -70,6 +70,8 @@ HttpdBuiltInUrl builtInUrls[]={
 	{NULL, NULL, NULL}
 };
 
+void user_rf_pre_init(void) {};
+
 void user_init(void) {
 	stdoutInit();
 	os_delay_us(500000);
@@ -78,12 +80,6 @@ void user_init(void) {
 	os_printf("max heap available at start: %u\r\n",system_get_free_heap_size());
 #endif
 	getSetupData();
-	if ( os_strstr(Setup.isInitialized,"ÿ") ) {
-#ifdef PLATFORM_DEBUG
-		os_printf("%s is not initialized, initializing default Setup...\r\n",(char *) getSmHoduleName());
-#endif
-		initSetupData();
-	}
 	httpdInit(builtInUrls, 80);
 	smhoduleInit();
 	os_printf("%s is ready\n",(char *) getSmHoduleName());

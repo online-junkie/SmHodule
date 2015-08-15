@@ -62,7 +62,7 @@ static void ICACHE_FLASH_ATTR createPayload( int count, char * ip ) {
     }
 }
 
-void sendStatus(int i) {
+void ICACHE_FLASH_ATTR sendStatus(int i) {
 	//if ( blocked == 0 ) {
     	if ( os_strlen(Setup.IP[0]) > 0 ) {
     		os_printf("Sending status\n");
@@ -180,6 +180,7 @@ void ICACHE_FLASH_ATTR initSetupData( void ) {
 	// only on first time setup or when wifi is reset
 	int id;
 	os_printf("reset Setup\n");
+/*
 	os_strcpy((uint8_t *) Setup.isInitialized, "0");
 	os_strcpy((uint8_t *) Setup.OLED, "0");
 	os_strcpy((uint8_t *) Setup.BMP180, "0");
@@ -198,6 +199,7 @@ void ICACHE_FLASH_ATTR initSetupData( void ) {
 	}
 	os_strcpy((uint8_t *) Setup.SSL, "0");
 	os_strcpy((uint8_t *) Setup.Auth, "0");
+	*/
 	os_strcpy((uint8_t *) Setup.WifiApPassword, "00000000");
 	os_strcpy((uint8_t *) Setup.WifiStPassword, "00000000");
 	saveConfig();

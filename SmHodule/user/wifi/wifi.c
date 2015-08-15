@@ -54,7 +54,7 @@ void ICACHE_FLASH_ATTR wifiInit()
 	#endif
 }
 
-void setup_wifi_ap_mode(void)
+void ICACHE_FLASH_ATTR setup_wifi_ap_mode(void)
 {
 //	wifi_set_opmode((wifi_get_opmode()|SOFTAP_MODE)&STATIONAP_MODE);
 //	wifi_set_opmode(SOFTAP_MODE);
@@ -89,7 +89,7 @@ void setup_wifi_ap_mode(void)
 	#endif
 }
 
-void setup_wifi_st_mode(void)
+void ICACHE_FLASH_ATTR setup_wifi_st_mode(void)
 {
 //	wifi_set_opmode((wifi_get_opmode()|STATION_MODE)&STATIONAP_MODE);
 	struct station_config stconfig;

@@ -23,7 +23,7 @@ SDK_BASE	?= c:/Espressif/ESP8266_SDK
 
 #Esptool.py path and port
 ESPTOOL		?= c:\Espressif\utils\esptool.exe
-ESPPORT		?= COM12
+ESPPORT		?= COM15
 
 # name for the target project
 TARGET		= httpd
