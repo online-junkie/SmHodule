@@ -32,7 +32,7 @@ Esp8266 http server - core routines
 //Max post buffer len
 #define MAX_POST 1024
 //Max send buffer len
-#define MAX_SENDBUFF_LEN 2048
+#define MAX_SENDBUFF_LEN 3072
 
 
 //This gets set at init time.

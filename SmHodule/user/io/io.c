@@ -56,10 +56,10 @@ static void ICACHE_FLASH_ATTR resetBtnUpTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("UP Cnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt>=4 ) { //<2 sec pressed
+		if (resetCnt>=3 ) { //>200msec pressed
 			sendKeyData(2,resetCnt); // long
 			os_printf("Key UP pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=3 ) { //<1 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
 			sendKeyData(2,0); //short
 			os_printf("Key UP pressed short\n");
 		}
@@ -74,11 +74,12 @@ static void ICACHE_FLASH_ATTR resetBtnLeftTimerCb(void *arg) {
 		os_printf("Left cnt: %d\n", resetCnt);
 	} else {
 		if (resetCnt > 40) { //>8 sec pressed and clear config
+			setup_wifi_ap_mode();
 			initSetupData();
-		} else if (resetCnt>=11 && resetCnt<=40) { //<8 sec pressed
+		} else if (resetCnt>=3 && resetCnt<=40) { //<8 sec pressed
 			sendKeyData(4,resetCnt); // long
 			os_printf("Key Left pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=10 ) { //<2 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
 			sendKeyData(4,0); //short
 			os_printf("Key Left pressed short\n");
 		}
@@ -92,10 +93,10 @@ static void ICACHE_FLASH_ATTR resetBtnRightTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("Right cnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt>=11) { //>2 sec pressed
+		if (resetCnt>=3) { //>200msec pressed
 			sendKeyData(3,resetCnt); // long
 			os_printf("Key RIGHT pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=10 ) { //<2 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
 			sendKeyData(3,0); //short
 			os_printf("Key RIGHT pressed short\n");
 		}
@@ -109,10 +110,10 @@ static void ICACHE_FLASH_ATTR resetBtnDwnTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("DOWN resetCnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt>=11) { //>=2 sec pressed
+		if (resetCnt>=3) { //>=200msec pressed
 			sendKeyData(1,resetCnt); // long
 			os_printf("Key DOWN pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=10 ) { //<2 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200 msec pressed
 			sendKeyData(1,0); //short
 			os_printf("Key DOWN pressed short\n");
 		}

@@ -3,7 +3,7 @@
 </head>
 <body>
 <div id="header">
-<h1><a href="index.tpl">SmHodule&#039;s for the IoT</a></h1>
+<h1><a href="../index.tpl">SmHodule&#039;s for the IoT</a></h1>
 </div>
 <div id="main">
 <h2>Setup</h2>
@@ -20,9 +20,6 @@
  <input type="radio" id="CCUIO" name="DPTYPE" value="2" /><label for="CCUIO"> ccu.io </label>
  <input type="radio" id="IOBROKER" name="DPTYPE" value="3" /><label for="IOBROKER"> ioBroker </label>
  <input type="radio" id="NATIVE" name="DPTYPE" value="4" /><label for="NATIVE">native</label> 
- <!-- 
- <input type="radio" id="MQTT" name="DPTYPE" value="5" /><label for="MQTT">mqtt</label> 
-  -->
 </div>
 <script>
 	var currDptype = "%DPTYPE%";
@@ -32,8 +29,6 @@
 		document.getElementById("IOBROKER").checked = true; 
 	} else if ( currDptype == "4" ) { 
 		document.getElementById("NATIVE").checked = true; 
-	} else if ( currDptype == "5" ) { 
-		document.getElementById("MQTT").checked = true; 
 	} else { 
 		document.getElementById("HM").checked = true; 
 	} 
@@ -73,9 +68,6 @@
 <tr><td>Data point:</td><td><input value="%DP%" type="text" id="DP" name="DP" pattern="[0-9]{1,8}"/></td><td></td><td></td></tr>
 <tr><td>User name:</td><td><input value="%USER%" type="text" id="USER" name="USER" pattern="*"/></td><td></td><td></td></tr>
 <tr><td>Pass phrase:</td><td><input value="%PASSWORD%" type="password" id="PASSWORD" name="PASSWORD" pattern="*"/></td><td></td><td></td></tr>
-<!--
-<tr><td>MQTT ID:</td><td><input value="%MQTTID%" type="text" id="MQTTID" name="MQTTID" pattern="*"/></td><td>d:&#60;org-id&#62;:&#60;type-id&#62;:&#60;device-id&#62;</td><td></td></tr>
--->
 <script>
 var str = document.getElementById("DEVICE");
 if (  str.value.substring(0,1) == "ÿ" ) { str.value=""; }

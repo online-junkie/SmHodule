@@ -64,11 +64,11 @@ static void ICACHE_FLASH_ATTR createPayload( int count, char * ip ) {
 
 void ICACHE_FLASH_ATTR sendStatus(int i) {
 	//if ( blocked == 0 ) {
-    	if ( os_strlen(Setup.IP[0]) > 0 ) {
+    	if ( os_strlen(Setup.IP) > 0 ) {
     		os_printf("Sending status\n");
     		ETS_GPIO_INTR_DISABLE();
-    		createPayload(i, (uint8_t *) Setup.IP[0]);
-    	    TcpSend(TCP, (uint8_t *) Setup.IP[0], atoi((uint8_t *) Setup.Port[0]),payload, NULL);
+    		createPayload(i, (uint8_t *) Setup.IP);
+    	    TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port),payload, NULL);
         	ETS_GPIO_INTR_ENABLE();
     	}
 	//}
@@ -85,8 +85,7 @@ void ICACHE_FLASH_ATTR resetPermMode( void ) {
 }
 
 void ICACHE_FLASH_ATTR saveConfig() {
-	os_printf("Saving: %s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s\r\n",(uint8_t *) Setup.DPType,(uint8_t *) Setup.DP,(uint8_t *) Setup.IP[0],(uint8_t *) Setup.Port[0],(uint8_t *) Setup.IP[1],(uint8_t *) Setup.Port[1],(uint8_t *) Setup.Auth,(uint8_t *) Setup.Interval,(uint8_t *) Setup.User,(uint8_t *) Setup.Pass,(uint8_t *) Setup.Type,(uint8_t *) Setup.Device);
-
+	//os_printf("Saving: %s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s\r\n",(uint8_t *) Setup.DPType,(uint8_t *) Setup.DP,(uint8_t *) Setup.IP,(uint8_t *) Setup.Port,(uint8_t *) Setup.AIP,(uint8_t *) Setup.APort,(uint8_t *) Setup.Auth,(uint8_t *) Setup.Interval,(uint8_t *) Setup.User,(uint8_t *) Setup.Pass,(uint8_t *) Setup.Type,(uint8_t *) Setup.Device);
 	os_timer_disarm(&smhodule_timer);
 	os_printf("saving config to flash\n");
 	ETS_GPIO_INTR_DISABLE();
@@ -116,13 +115,11 @@ void ICACHE_FLASH_ATTR sendKeyData(int i, int j) {
 	os_sprintf(payload, "GET /api/set?switch=1&toggle=%d&key=%d&percent=%d HTTP/1.0\r\nHost: ",lastvalue[i],i,lastvalue[i+1]);
 //	if ( blocked == 0 ) {
     	ETS_GPIO_INTR_DISABLE();
-    	for (id=1;id<=3;id++) {
-    		if ( os_strlen(Setup.IP[id]) > 0 ) {
-    			os_sprintf(payload, "%s %s\r\n%s",payload,(uint8_t *) Setup.IP[id],pheadbuffer);
+    		if ( os_strlen(Setup.IP) > 0 ) {
+    			os_sprintf(payload, "%s %s\r\n%s",payload,(uint8_t *) Setup.IP,pheadbuffer);
     			os_printf(payload);
-    			TcpSend(TCP, (uint8_t *) Setup.IP[id], atoi((uint8_t *) Setup.Port[id]), payload, NULL);
+    			TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port), payload, NULL);
     		}
-    	}
     	ETS_GPIO_INTR_ENABLE();
 //    }
 }
@@ -136,10 +133,10 @@ static void ICACHE_FLASH_ATTR sendData(void *arg) {
     	    "ts": "2015-03-03 23:04:19"
     	  }
     	} */
-    	if ( os_strlen(Setup.IP[0]) > 0 ) {
+    	if ( os_strlen(Setup.IP) > 0 ) {
     		ETS_GPIO_INTR_DISABLE();
     		createPayload(-1, (uint8_t *) Setup.IP);
-    		TcpSend(TCP, (uint8_t *) Setup.IP[0], atoi((uint8_t *) Setup.Port[0]), payload, sleep_cb);
+    		TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port), payload, sleep_cb);
     		ETS_GPIO_INTR_ENABLE();
     	}
 //    }
@@ -178,30 +175,11 @@ void smhoduleInit (void ) {
 //os_sprintf(sysCfg.mqtt_user, "%s", MQTT_USER);
 void ICACHE_FLASH_ATTR initSetupData( void ) {
 	// only on first time setup or when wifi is reset
-	int id;
 	os_printf("reset Setup\n");
-/*
-	os_strcpy((uint8_t *) Setup.isInitialized, "0");
-	os_strcpy((uint8_t *) Setup.OLED, "0");
-	os_strcpy((uint8_t *) Setup.BMP180, "0");
-	os_sprintf((uint8_t *) Setup.Device, "%s", getSmHoduleName());
-	os_sprintf((uint8_t *) Setup.device_id, "");
-	os_sprintf((uint8_t *) Setup.DP, "");
-	os_sprintf((uint8_t *) Setup.Altitude, "0");
-	os_sprintf((uint8_t *) Setup.User, "");
-	os_sprintf((uint8_t *) Setup.Pass, "");
-	os_strcpy((uint8_t *) Setup.DPType, "1");
-	os_strcpy((uint8_t *) Setup.Type, "3"); //defaults to act as switch
-	os_strcpy((uint8_t *) Setup.Interval, "0");
-	for ( id=0; id<=3; id++) {
-		os_sprintf((uint8_t *) Setup.IP[id], "");
-		os_sprintf((uint8_t *) Setup.Port[id], "8080");
-	}
-	os_strcpy((uint8_t *) Setup.SSL, "0");
-	os_strcpy((uint8_t *) Setup.Auth, "0");
-	*/
-	os_strcpy((uint8_t *) Setup.WifiApPassword, "00000000");
-	os_strcpy((uint8_t *) Setup.WifiStPassword, "00000000");
+	os_sprintf((uint8_t *) Setup.Device, "%s", (uint8_t *) getSmHoduleName());
+	os_strcpy((uint8_t *) Setup.isInitialized , (uint8_t *) "1");
+	os_strcpy((uint8_t *) Setup.WifiApPassword, (uint8_t *) "00000000");
+	os_strcpy((uint8_t *) Setup.WifiStPassword, (uint8_t *) "00000000");
 	saveConfig();
 }
 

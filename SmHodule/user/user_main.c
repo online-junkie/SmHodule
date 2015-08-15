@@ -22,6 +22,7 @@
 #include "tty/stdout.h"
 #include "http/auth.h"
 #include "wifi/mac.h"
+#include "wifi/wifi.h"
 #include "user_interface.h"
 #include "smhodule.h"
 
@@ -74,12 +75,19 @@ void user_rf_pre_init(void) {};
 
 void user_init(void) {
 	stdoutInit();
-	os_delay_us(500000);
+	os_delay_us(5000);
 	os_printf("\n");
 #ifdef PLATFORM_DEBUG
 	os_printf("max heap available at start: %u\r\n",system_get_free_heap_size());
 #endif
 	getSetupData();
+	if ( os_strstr(Setup.isInitialized,"ÿ") ) {
+		initSetupData();
+		os_printf("%s, initializing\r\n",(char *) Setup.Device);
+		setup_wifi_ap_mode();
+		os_delay_us(500000);
+		system_restart();
+	}
 	httpdInit(builtInUrls, 80);
 	smhoduleInit();
 	os_printf("%s is ready\n",(char *) getSmHoduleName());
