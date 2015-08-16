@@ -23,15 +23,14 @@ SETUPDATA Setup;
 char payload[1024];
 
 //MQTT_Client mqttClient;
-//static char pheadbuffer[] = "Connection: close\r\n\r\n";
+static char pheadbuffer[] = "Connection: close\r\n\r\n";
 
-static char pheadbuffer[] = "Connection: keep-alive\r\n\
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n\
-Upgrade-Insecure-Requests: 1\r\n\
-User-Agent: Mozilla/5.0 (SmHodule)\r\n\
-Accept-Encoding: gzip, deflate, sdch\r\n\
-Accept-Language: de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4\r\n\r\n";
-
+/*
+static char pheadbuffer[] = "Keep-Alive: 5\r\n\
+Connection: keep-alive\r\n\
+Accept: text/html\r\n\
+User-Agent: Mozilla/5.0 (SmHodule)\r\n\r\n";
+*/
 /*
 static void ICACHE_FLASH_ATTR nop_cb(void) {
 	os_printf("nop_cb\r\n");
