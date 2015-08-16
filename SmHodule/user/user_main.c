@@ -83,6 +83,8 @@ void user_init(void) {
 	getSetupData();
 	if ( os_strstr(Setup.isInitialized,"ÿ") ) {
 		initSetupData();
+		os_strcpy((uint8_t *) Setup.isInitialized , (uint8_t *) "1");
+		saveConfig();
 		os_printf("%s, initializing\r\n",(char *) Setup.Device);
 		setup_wifi_ap_mode();
 		os_delay_us(500000);

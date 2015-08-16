@@ -175,9 +175,16 @@ void smhoduleInit (void ) {
 //os_sprintf(sysCfg.mqtt_user, "%s", MQTT_USER);
 void ICACHE_FLASH_ATTR initSetupData( void ) {
 	// only on first time setup or when wifi is reset
-	os_printf("reset Setup\n");
+	os_timer_disarm(&smhodule_timer);
+	os_printf("flush config\n");
+	ETS_GPIO_INTR_DISABLE();
+	ETS_UART_INTR_DISABLE();
+	spi_flash_erase_sector(FLASHSECTOR);
+	ETS_UART_INTR_ENABLE();
+	ETS_GPIO_INTR_ENABLE();
+	os_timer_arm(&smhodule_timer, (seconds * 1000), 1);
+	spi_flash_read((SPI_FLASH_SEC_SIZE * FLASHSECTOR), (uint32 *)&Setup, sizeof(SETUPDATA));
 	os_sprintf((uint8_t *) Setup.Device, "%s", (uint8_t *) getSmHoduleName());
-	os_strcpy((uint8_t *) Setup.isInitialized , (uint8_t *) "1");
 	os_strcpy((uint8_t *) Setup.WifiApPassword, (uint8_t *) "00000000");
 	os_strcpy((uint8_t *) Setup.WifiStPassword, (uint8_t *) "00000000");
 	saveConfig();
