@@ -56,10 +56,10 @@ static void ICACHE_FLASH_ATTR resetBtnUpTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("UP Cnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt>=4 ) { //<2 sec pressed
+		if (resetCnt>=3 ) { //>200msec pressed
 			sendKeyData(2,resetCnt); // long
 			os_printf("Key UP pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=3 ) { //<1 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
 			sendKeyData(2,0); //short
 			os_printf("Key UP pressed short\n");
 		}
@@ -73,24 +73,13 @@ static void ICACHE_FLASH_ATTR resetBtnLeftTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("Left cnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt > 30) { //>30 sec pressed and clear config
-			initSetupData();
-			wifi_station_disconnect();
-			wifi_set_opmode(0x3); //reset to AP
-			//wifiInit();
-			setup_wifi_st_mode();
+		if (resetCnt > 40) { //>8 sec pressed and clear config
 			setup_wifi_ap_mode();
-			os_printf("%s reset to AP+ST mode\n",(char *) getSmHoduleName());
-		} else if (resetCnt>=15 && resetCnt<20) { //< 10 sec pressed
-			os_printf("resetting to permanent for configuration...\n");
-			resetPermMode();
-		} else if (resetCnt>=10 && resetCnt<14) { //<7 sec pressed
-			os_printf("restart...\n");
-			system_restart();
-		} else if (resetCnt>=4 && resetCnt<=9) { //<2 sec pressed
+			initSetupData();
+		} else if (resetCnt>=3 && resetCnt<=40) { //<8 sec pressed
 			sendKeyData(4,resetCnt); // long
 			os_printf("Key Left pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=3 ) { //<1 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
 			sendKeyData(4,0); //short
 			os_printf("Key Left pressed short\n");
 		}
@@ -104,10 +93,10 @@ static void ICACHE_FLASH_ATTR resetBtnRightTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("Right cnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt>=3 && resetCnt<=5) { //<2 sec pressed
+		if (resetCnt>=3) { //>200msec pressed
 			sendKeyData(3,resetCnt); // long
 			os_printf("Key RIGHT pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=2 ) { //<1 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
 			sendKeyData(3,0); //short
 			os_printf("Key RIGHT pressed short\n");
 		}
@@ -121,10 +110,10 @@ static void ICACHE_FLASH_ATTR resetBtnDwnTimerCb(void *arg) {
 		resetCnt++;
 		os_printf("DOWN resetCnt: %d\n", resetCnt);
 	} else {
-		if (resetCnt>=4) { //>=2 sec pressed
+		if (resetCnt>=3) { //>=200msec pressed
 			sendKeyData(1,resetCnt); // long
 			os_printf("Key DOWN pressed long\n");
-		} else if (resetCnt>=1 && resetCnt <=3 ) { //<2 sec pressed
+		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200 msec pressed
 			sendKeyData(1,0); //short
 			os_printf("Key DOWN pressed short\n");
 		}
@@ -144,7 +133,7 @@ static void ICACHE_FLASH_ATTR gpio13_int_handler(int8_t key) // key not right us
     ETS_GPIO_INTR_ENABLE();                                         // Enable gpio interrupts
 }
 
-void gpio13_int_prepare(void)
+void ICACHE_FLASH_ATTR gpio13_int_prepare(void)
 {
 	// prepare GPIO13 to handle interrupts
 	ETS_GPIO_INTR_DISABLE();  										// Disable gpio interrupts
@@ -154,15 +143,14 @@ void gpio13_int_prepare(void)
 	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(13));               // Clear GPIO13 status
 	gpio_pin_intr_state_set(GPIO_ID_PIN(13), GPIO_PIN_INTR_POSEDGE); // Interrupt on GPIO13
 	PIN_PULLUP_DIS(PERIPHS_IO_MUX_MTCK_U);                          // Disabe pullup
-	PIN_PULLDWN_DIS(PERIPHS_IO_MUX_MTCK_U);                        // Disable pulldown
 	ETS_GPIO_INTR_ENABLE();                                         // Enable gpio interrupts
 }
 
-uint16_t getGpio13Counter(void) {
+uint16_t ICACHE_FLASH_ATTR getGpio13Counter(void) {
 	return gpio13_counter;
 }
 
-void resetGpio13Counter(void) {
+void ICACHE_FLASH_ATTR resetGpio13Counter(void) {
 	gpio13_counter = 0;
 }
 
@@ -196,22 +184,22 @@ void ioInit() {
 		//gpio16_output_set(1);
 		// Key UP GPIO2
 		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U, FUNC_GPIO2);
-		gpio_output_set(0, 0, 0, GPIO_ID_PIN(2));                          // Set GPIO2 as input
+
 		os_timer_disarm(&resetBtnUptimer);
 		os_timer_setfn(&resetBtnUptimer, resetBtnUpTimerCb, NULL);
-		os_timer_arm(&resetBtnUptimer, 500, 1);
+		os_timer_arm(&resetBtnUptimer, 100, 1);
 		// Key Right GPIO13
 		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
-		gpio_output_set(0, 0, 0, GPIO_ID_PIN(13));                          // Set GPIO13 as input
+
 		os_timer_disarm(&resetBtnRighttimer);
 		os_timer_setfn(&resetBtnRighttimer, resetBtnRightTimerCb, NULL);
-		os_timer_arm(&resetBtnRighttimer, 500, 1);
+		os_timer_arm(&resetBtnRighttimer, 100, 1);
 		// Key DOWN GPIO0
 		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0);
-		gpio_output_set(0, 0, 0, GPIO_ID_PIN(0));                          // Set GPIO0 as input
+
 		os_timer_disarm(&resetBtnDwntimer);
 		os_timer_setfn(&resetBtnDwntimer, resetBtnDwnTimerCb, NULL);
-		os_timer_arm(&resetBtnDwntimer, 500, 1);
+		os_timer_arm(&resetBtnDwntimer, 100, 1);
 	} else {
 		// SmHodule is used as a sensor
 		// if used as a sensor, then gpio13 is used to count events
@@ -221,8 +209,8 @@ void ioInit() {
 	// By default GPIO 15 is used to reset values, wifi or module
 	//key LEFT GPIO15
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15);
-	gpio_output_set(0, 0, 0, GPIO_ID_PIN(15));                          // Set GPIO15 as input
+
 	os_timer_disarm(&resetBtnLefttimer);
 	os_timer_setfn(&resetBtnLefttimer, resetBtnLeftTimerCb, NULL);
-	os_timer_arm(&resetBtnLefttimer, 500, 1);
+	os_timer_arm(&resetBtnLefttimer, 100, 1);
 }

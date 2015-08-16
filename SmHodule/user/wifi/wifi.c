@@ -19,7 +19,7 @@ void ICACHE_FLASH_ATTR wifiInit()
 	if(wifi_get_opmode() != USE_WIFI_MODE)
 	{
 		#ifdef PLATFORM_DEBUG
-		os_printf("%s not in %s mode, restarting in %s mode...\r\n",(char *) getSmHoduleName(), WiFiMode[USE_WIFI_MODE], WiFiMode[USE_WIFI_MODE]);
+		os_printf("%s not in %s mode, restarting in %s mode...\r\n",(char *) Setup.Device, WiFiMode[USE_WIFI_MODE], WiFiMode[USE_WIFI_MODE]);
 		#endif
 		if(USE_WIFI_MODE & ( SOFTAP_MODE | STATIONAP_MODE))
 			setup_wifi_ap_mode();
@@ -54,17 +54,17 @@ void ICACHE_FLASH_ATTR wifiInit()
 	#endif
 }
 
-void setup_wifi_ap_mode(void)
+void ICACHE_FLASH_ATTR setup_wifi_ap_mode(void)
 {
-//	wifi_set_opmode((wifi_get_opmode()|SOFTAP_MODE)&STATIONAP_MODE);
-//	wifi_set_opmode(SOFTAP_MODE);
+	wifi_set_opmode((wifi_get_opmode()|SOFTAP_MODE)&STATIONAP_MODE);
+	wifi_set_opmode(SOFTAP_MODE);
 	struct softap_config apconfig;
 	if(wifi_softap_get_config(&apconfig))
 	{
 		wifi_softap_dhcps_stop();
 		memset(apconfig.ssid, 0, sizeof(apconfig.ssid));
 		memset(apconfig.password, 0, sizeof(apconfig.password));
-		apconfig.ssid_len = os_sprintf(apconfig.ssid, "%s",(char *) getSmHoduleName());
+		apconfig.ssid_len = os_sprintf(apconfig.ssid, "%s",(char *) Setup.Device);
 		os_sprintf(apconfig.password, "%s", Setup.WifiApPassword);
 		apconfig.authmode = AUTH_WPA_WPA2_PSK;
 		apconfig.ssid_hidden = 0;
@@ -73,7 +73,7 @@ void setup_wifi_ap_mode(void)
 		if(!wifi_softap_set_config(&apconfig))
 		{
 			#ifdef PLATFORM_DEBUG
-			os_printf("%s not set AP config!\r\n",(char *) getSmHoduleName());
+			os_printf("%s not set AP config!\r\n",(char *) Setup.Device);
 			#endif
 		};
 		struct ip_info ipinfo;
@@ -85,13 +85,13 @@ void setup_wifi_ap_mode(void)
 		wifi_softap_dhcps_start();
 	}
 	#ifdef PLATFORM_DEBUG
-	os_printf("%s in AP mode configured. ssid:%s, password:%s\r\n",(char *) getSmHoduleName(),apconfig.ssid,apconfig.password);
+	os_printf("%s in AP mode configured. ssid:%s, password:%s\r\n",(char *) Setup.Device,apconfig.ssid,apconfig.password);
 	#endif
 }
 
-void setup_wifi_st_mode(void)
+void ICACHE_FLASH_ATTR setup_wifi_st_mode(void)
 {
-//	wifi_set_opmode((wifi_get_opmode()|STATION_MODE)&STATIONAP_MODE);
+	wifi_set_opmode((wifi_get_opmode()|STATION_MODE)&STATIONAP_MODE);
 	struct station_config stconfig;
 	wifi_station_disconnect();
 	wifi_station_dhcpc_stop();
@@ -99,12 +99,12 @@ void setup_wifi_st_mode(void)
 	{
 		memset(stconfig.ssid, 0, sizeof(stconfig.ssid));
 		memset(stconfig.password, 0, sizeof(stconfig.password));
-		os_sprintf(stconfig.ssid, "AP%s",(char *) getSmHoduleName());
+		os_sprintf(stconfig.ssid, "AP%s",(char *) Setup.Device);
 		os_sprintf(stconfig.password, "%s", Setup.WifiStPassword);
 		if(!wifi_station_set_config(&stconfig))
 		{
 			#ifdef PLATFORM_DEBUG
-			os_printf("%s not set station config!\r\n",(char *) getSmHoduleName());
+			os_printf("%s not set station config!\r\n",(char *) Setup.Device);
 			#endif
 		}
 	}
@@ -112,7 +112,7 @@ void setup_wifi_st_mode(void)
 	wifi_station_dhcpc_start();
 	wifi_station_set_auto_connect(1);
 	#ifdef PLATFORM_DEBUG
-	os_printf("%s in STA mode configured.\r\n",(char *) getSmHoduleName());
+	os_printf("%s in STA mode configured.\r\n",(char *) Setup.Device);
 	#endif
 }
 

@@ -23,7 +23,7 @@ SDK_BASE	?= c:/Espressif/ESP8266_SDK
 
 #Esptool.py path and port
 ESPTOOL		?= c:\Espressif\utils\esptool.exe
-ESPPORT		?= COM12
+ESPPORT		?= COM15
 
 # name for the target project
 TARGET		= httpd
@@ -152,7 +152,7 @@ html: webpages.espfs
 	if [ $$(stat -c '%s' webpages.espfs) -gt $$(( 0x2E000 )) ]; then echo "webpages.espfs too big!"; false; fi
 	
 flashall:
-	$(ESPTOOL) -p $(ESPPORT) write_flash 0x3c000 ../../ESP8266_SDK/bin/blank.bin 0x3a000 ../../ESP8266_SDK/bin/blank.bin 0x3e000 ../../ESP8266_SDK/bin/blank.bin 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin 0x12000 webpages.espfs  
+	$(ESPTOOL) -p $(ESPPORT) write_flash 0x3c000 $(SDK_BASE)/bin/blank.bin 0x3a000 $(SDK_BASE)/bin/blank.bin 0x3e000  $(SDK_BASE)/bin/blank.bin 0x7e000 $(SDK_BASE)/bin/blank.bin 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin 0x12000 webpages.espfs  
 
 flashhtml:
 	$(ESPTOOL) -p $(ESPPORT) write_flash 0x12000 webpages.espfs  

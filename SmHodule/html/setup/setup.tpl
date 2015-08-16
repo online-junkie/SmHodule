@@ -3,7 +3,7 @@
 </head>
 <body>
 <div id="header">
-<h1><a href="index.htm">SmHodule&#039;s for the IoT</a></h1>
+<h1><a href="../index.tpl">SmHodule&#039;s for the IoT</a></h1>
 </div>
 <div id="main">
 <h2>Setup</h2>
@@ -20,9 +20,6 @@
  <input type="radio" id="CCUIO" name="DPTYPE" value="2" /><label for="CCUIO"> ccu.io </label>
  <input type="radio" id="IOBROKER" name="DPTYPE" value="3" /><label for="IOBROKER"> ioBroker </label>
  <input type="radio" id="NATIVE" name="DPTYPE" value="4" /><label for="NATIVE">native</label> 
- <!-- 
- <input type="radio" id="MQTT" name="DPTYPE" value="5" /><label for="MQTT">mqtt</label> 
-  -->
 </div>
 <script>
 	var currDptype = "%DPTYPE%";
@@ -32,8 +29,6 @@
 		document.getElementById("IOBROKER").checked = true; 
 	} else if ( currDptype == "4" ) { 
 		document.getElementById("NATIVE").checked = true; 
-	} else if ( currDptype == "5" ) { 
-		document.getElementById("MQTT").checked = true; 
 	} else { 
 		document.getElementById("HM").checked = true; 
 	} 
@@ -73,9 +68,16 @@
 <tr><td>Data point:</td><td><input value="%DP%" type="text" id="DP" name="DP" pattern="[0-9]{1,8}"/></td><td></td><td></td></tr>
 <tr><td>User name:</td><td><input value="%USER%" type="text" id="USER" name="USER" pattern="*"/></td><td></td><td></td></tr>
 <tr><td>Pass phrase:</td><td><input value="%PASSWORD%" type="password" id="PASSWORD" name="PASSWORD" pattern="*"/></td><td></td><td></td></tr>
-<!--
-<tr><td>MQTT ID:</td><td><input value="%MQTTID%" type="text" id="MQTTID" name="MQTTID" pattern="*"/></td><td>d:&#60;org-id&#62;:&#60;type-id&#62;:&#60;device-id&#62;</td><td></td></tr>
--->
+<script>
+var str = document.getElementById("DEVICE");
+if (  str.value.substring(0,1) == "ÿ" ) { str.value=""; }
+var str = document.getElementById("DP");
+if (  str.value.substring(0,1) == "ÿ" ) { str.value=""; }
+var str = document.getElementById("USER");
+if (  str.value.substring(0,1) == "ÿ" ) { str.value=""; }
+var str = document.getElementById("PASSWORD");
+if (  str.value.substring(0,1) == "ÿ" ) { str.value=""; }
+</script>
 <tr>
 </td></tr>
 <tr><td>Interval:</td>
@@ -142,9 +144,16 @@
 <tr><td>Host IP Adress:</td><td><input size="40" value="%IP%" type="text" id="IP" name="IP" pattern="*\.+"/>:<input size="5" value="%PORT%" type="text" id="PORT" name="PORT" pattern="[0-9]{1,5}"/></td><td></td><td></td></tr>
 <!--<tr><td colpan=4></br></td></tr>-->
 <tr><td>Actor IP Adress:</td><td><input size="40" value="%AIP%" type="text" id="AIP" name="AIP" pattern="*\.+"/>:<input size="5" value="%APORT%" type="text" id="APORT" name="APORT" pattern="[0-9]{1,5}"/></td><td></td><td></td></tr>
-<!-- <tr><td>2nd Actor IP Adress:</td><td><input size="40" value="%A2IP%" type="text" id="A2IP" name="A2IP" pattern="*\.+"/>:<input size="5" value="%A2PORT%" type="text" id="A2PORT" name="A2PORT" pattern="[0-9]{1,5}"/></td><td></td><td></td></tr>
-<tr><td>3rd Actor IP Adress:</td><td><input size="40" value="%A3IP%" type="text" id="A3IP" name="A3IP" pattern="*\.+"/>:<input size="5" value="%A3PORT%" type="text" id="A3PORT" name="A3PORT" pattern="[0-9]{1,5}"/></td><td></td><td></td></tr>-->
-<!--<tr><td>SSL:</td>
+<script>
+var str = document.getElementById("AIP");
+if (  str.value.substring(0,1) == "ÿ" ) { str.value=""; }
+str = document.getElementById("APORT");
+if ( str.value.substring(0,1)=="ÿ" ) { str.value="8080"; }
+str = document.getElementById("IP");
+if ( str.value.substring(0,1)=="ÿ" ) { str.value=""; }
+str = document.getElementById("PORT");
+if ( str.value.substring(0,1)=="ÿ" ) { str.value="8080"; }
+</script><!--<tr><td>SSL:</td>
 <td colspan=3>
 <div class="radio-toolbar">
  <input type="radio" id="ON" name="SSL" value="1" /><label for="ON">ON</label>
@@ -161,7 +170,10 @@
 </td></tr> -->
 <tr><td colpan=4></br></td></tr>
 <tr><td>Alitude:</td><td><input value="%ALTITUDE%" type="text" id="ALTITUDE" name="ALTITUDE" pattern="[0-9]{1,4}"/> m</td><td></td><td></td></tr>
-<tr><td colpan=4></br></td></tr>
+<script>
+var str = document.getElementById("ALTITUDE");
+if (  str.value.substring(0,1) == "ÿ" ) { str.value="0"; }
+</script><tr><td colpan=4></br></td></tr>
 <tr><td><input type="submit"/></td><td></td><td></td></tr>
 </table>
 </form>
