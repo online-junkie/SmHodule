@@ -24,10 +24,10 @@
 #include "i2c/i2c_oled.h"
 #include "i2c/i2c_bmp180.h"
 
-#define BTNDOWNGPIO 0
-#define BTNUPGPIO 2
-#define BTNRIGHTGPIO 13
-#define BTNLEFTGPIO 15
+#define BTNDOWNGPIO 15
+#define BTNUPGPIO 13
+#define BTNRIGHTGPIO 2
+#define BTNLEFTGPIO 0
 
 static volatile bool OLED;
 static ETSTimer resetBtnDwntimer;
@@ -182,35 +182,35 @@ void ioInit() {
 	} else if ( atoi((uint8_t *) Setup.Type) == 2 ) {
 		// SmHodule is used as a sender...
 		//gpio16_output_set(1);
-		// Key UP GPIO2
+
+		// Key Right GPIO2
 		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U, FUNC_GPIO2);
-
-		os_timer_disarm(&resetBtnUptimer);
-		os_timer_setfn(&resetBtnUptimer, resetBtnUpTimerCb, NULL);
-		os_timer_arm(&resetBtnUptimer, 100, 1);
-		// Key Right GPIO13
-		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
-
 		os_timer_disarm(&resetBtnRighttimer);
 		os_timer_setfn(&resetBtnRighttimer, resetBtnRightTimerCb, NULL);
 		os_timer_arm(&resetBtnRighttimer, 100, 1);
-		// Key DOWN GPIO0
-		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0);
 
-		os_timer_disarm(&resetBtnDwntimer);
-		os_timer_setfn(&resetBtnDwntimer, resetBtnDwnTimerCb, NULL);
-		os_timer_arm(&resetBtnDwntimer, 100, 1);
+		// Key Up GPIO13
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
+		os_timer_disarm(&resetBtnUptimer);
+		os_timer_setfn(&resetBtnUptimer, resetBtnUpTimerCb, NULL);
+		os_timer_arm(&resetBtnUptimer, 100, 1);
+
+		// Key Left GPIO0
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0);
+		os_timer_disarm(&resetBtnLefttimer);
+		os_timer_setfn(&resetBtnLefttimer, resetBtnLeftTimerCb, NULL);
+		os_timer_arm(&resetBtnLefttimer, 100, 1);
 	} else {
 		// SmHodule is used as a sensor
 		// if used as a sensor, then gpio13 is used to count events
 		// basically a 10sec measurement and then value is send to host
 		gpio13_int_prepare();  // for interrupt
 	}
-	// By default GPIO 15 is used to reset values, wifi or module
-	//key LEFT GPIO15
-	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15);
 
-	os_timer_disarm(&resetBtnLefttimer);
-	os_timer_setfn(&resetBtnLefttimer, resetBtnLeftTimerCb, NULL);
-	os_timer_arm(&resetBtnLefttimer, 100, 1);
+	// By default GPIO 15 is used to reset module incl. wifi
+	//key Dwn GPIO15
+	PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15);
+	os_timer_disarm(&resetBtnDwntimer);
+	os_timer_setfn(&resetBtnDwntimer, resetBtnDwnTimerCb, NULL);
+	os_timer_arm(&resetBtnDwntimer, 100, 1);
 }
