@@ -139,7 +139,7 @@ blank:
 	$(ESPTOOL) -p $(ESPPORT) write_flash 0x3c000 ../../ESP8266_SDK/bin/blank.bin 0x3a000 ../../ESP8266_SDK/bin/blank.bin 0x3e000 ../../ESP8266_SDK/bin/blank.bin
 	
 flash: $(FW_FILE_1) $(FW_FILE_2)
-	$(ESPTOOL) -p $(ESPPORT) write_flash 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin 0x12000 webpages.espfs 
+	$(ESPTOOL) -p $(ESPPORT) write_flash 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin 
 
 webpages.espfs: cleanwebpages
 	cd html; find | ../mkespfsimage/mkespfsimage.exe > ../webpages.espfs; cd ..

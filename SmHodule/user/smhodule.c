@@ -25,14 +25,28 @@ char payload[1024];
 //MQTT_Client mqttClient;
 //static char pheadbuffer[] = "Connection: close\r\n\r\n";
 
-static char pheadbuffer[] = "Keep-Alive: 5\r\n\
-Connection: keep-alive\r\n\r\n";
+static char pheadbuffer[] = "Connection: keep-alive\r\n\
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n\
+Upgrade-Insecure-Requests: 1\r\n\
+User-Agent: Mozilla/5.0 (SmHodule)\r\n\
+Accept-Encoding: gzip, deflate, sdch\r\n\
+Accept-Language: de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4\r\n\r\n";
 
 /*
 static void ICACHE_FLASH_ATTR nop_cb(void) {
 	os_printf("nop_cb\r\n");
 }
 */
+
+static void ICACHE_FLASH_ATTR sleep_cb(void) {
+	os_printf("sleep_cb\r\n");
+	if ( (atoi((uint8_t *) Setup.Interval) > 0) && (atoi((uint8_t *) Setup.Type) == 1)) {
+		// if used as a Sender then we can use deep-sleep to save power, acting as a receiver or Permanent then skip deep sleep
+		// GPIO 16 has to be connected to RST for making deep_sleep work.
+		system_deep_sleep(atoi((uint8_t *) Setup.Interval)*60*1000*1000);
+	}
+}
+
 static void ICACHE_FLASH_ATTR createPayload( int count, char * ip ) {
 	char hostdata[480];
     if ( count < 0 ) {
@@ -68,10 +82,50 @@ void ICACHE_FLASH_ATTR sendStatus(int i) {
     		os_printf("Sending status\n");
     		ETS_GPIO_INTR_DISABLE();
     		createPayload(i, (uint8_t *) Setup.IP);
+    		os_printf(payload);
     	    TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port),payload, NULL);
         	ETS_GPIO_INTR_ENABLE();
     	}
 	//}
+}
+//send data to switch
+void ICACHE_FLASH_ATTR sendKeyData(int i, int j) {
+
+	char payload[1024];
+	int id;
+	static int lastvalue[10] = {0,0,0,0,0,0,0,0,0,0};
+	lastvalue[i] = ( lastvalue[i] ) ? 0 : 1;
+	lastvalue[i+1] = j;
+	os_sprintf(payload, "GET /api/set?switch=1&toggle=%d&key=%d&duration=%d HTTP/1.0\r\nHost:",lastvalue[i],i,lastvalue[i+1]);
+//	if ( blocked == 0 ) {
+    	ETS_GPIO_INTR_DISABLE();
+    		if ( os_strlen(Setup.AIP) > 0 ) {
+    			os_sprintf(payload, "%s %s\r\n%s",payload,(uint8_t *) Setup.AIP,pheadbuffer);
+    			os_printf(payload);
+    			TcpSend(TCP, (uint8_t *) Setup.AIP, atoi((uint8_t *) Setup.APort), payload, NULL);
+    		}
+    	ETS_GPIO_INTR_ENABLE();
+//    }
+}
+
+// send data to Host
+static void ICACHE_FLASH_ATTR sendData(void *arg) {
+//    if ( blocked == 0 ) {
+/*    	response if ccu.io
+ * 		{
+    	  "100015": {
+    	    "val": 50,
+    	    "ts": "2015-03-03 23:04:19"
+    	  }
+    	} */
+    	if ( os_strlen(Setup.IP) > 0 ) {
+    		ETS_GPIO_INTR_DISABLE();
+    		createPayload(-1, (uint8_t *) Setup.IP);
+    		os_printf(payload);
+    		TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port), payload, sleep_cb);
+    		ETS_GPIO_INTR_ENABLE();
+    	}
+//    }
 }
 
 void ICACHE_FLASH_ATTR readConfig( void ) {
@@ -95,51 +149,6 @@ void ICACHE_FLASH_ATTR saveConfig() {
 	ETS_UART_INTR_ENABLE();
 	ETS_GPIO_INTR_ENABLE();
 	os_timer_arm(&smhodule_timer, (seconds * 1000), 1);
-}
-
-static void ICACHE_FLASH_ATTR sleep_cb(void) {
-	os_printf("sleep_cb\r\n");
-	if ( (atoi((uint8_t *) Setup.Interval) > 0) && (atoi((uint8_t *) Setup.Type) == 1)) {
-		// if used as a Sender then we can use deep-sleep to save power, acting as a receiver or Permanent then skip deep sleep
-		// GPIO 16 has to be connected to RST for making deep_sleep work.
-		system_deep_sleep(atoi((uint8_t *) Setup.Interval)*60*1000*1000);
-	}
-}
-
-void ICACHE_FLASH_ATTR sendKeyData(int i, int j) {
-	char payload[1024];
-	int id;
-	static int lastvalue[10] = {0,0,0,0,0,0,0,0,0,0};
-	lastvalue[i] = ( lastvalue[i] ) ? 0 : 1;
-	lastvalue[i+1] = j;
-	os_sprintf(payload, "GET /api/set?switch=1&toggle=%d&key=%d&percent=%d HTTP/1.0\r\nHost: ",lastvalue[i],i,lastvalue[i+1]);
-//	if ( blocked == 0 ) {
-    	ETS_GPIO_INTR_DISABLE();
-    		if ( os_strlen(Setup.IP) > 0 ) {
-    			os_sprintf(payload, "%s %s\r\n%s",payload,(uint8_t *) Setup.IP,pheadbuffer);
-    			os_printf(payload);
-    			TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port), payload, NULL);
-    		}
-    	ETS_GPIO_INTR_ENABLE();
-//    }
-}
-
-static void ICACHE_FLASH_ATTR sendData(void *arg) {
-//    if ( blocked == 0 ) {
-/*    	response if ccu.io
- * 		{
-    	  "100015": {
-    	    "val": 50,
-    	    "ts": "2015-03-03 23:04:19"
-    	  }
-    	} */
-    	if ( os_strlen(Setup.IP) > 0 ) {
-    		ETS_GPIO_INTR_DISABLE();
-    		createPayload(-1, (uint8_t *) Setup.IP);
-    		TcpSend(TCP, (uint8_t *) Setup.IP, atoi((uint8_t *) Setup.Port), payload, sleep_cb);
-    		ETS_GPIO_INTR_ENABLE();
-    	}
-//    }
 }
 
 // normal system startup

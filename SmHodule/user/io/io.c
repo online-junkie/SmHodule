@@ -156,7 +156,7 @@ void ICACHE_FLASH_ATTR resetGpio13Counter(void) {
 
 void ioInit() {
 	bool isInitialized = 0;
-
+	gpio_init();
 	// validate if possible because during boot GPIO0 and GPIO15 need to be low level
 
     // 12 and 14 should be used for I2C bus
