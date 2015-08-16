@@ -149,6 +149,7 @@ static void ICACHE_FLASH_ATTR resetTimerCb(void *arg) {
 		//Go to STA mode. This needs a reset, so do that.
 		os_printf("Got IP. Going into STA mode..\n");
 		wifi_set_opmode(1);
+		os_delay_us(500000);
 		system_restart();
 	} else {
 		os_printf("Connect fail. Not going into STA-only mode.\n");
@@ -263,7 +264,7 @@ void ICACHE_FLASH_ATTR tplWlan(HttpdConnData *connData, char *token, void **arg)
 	os_strcpy(buff, "Unknown");
 	if (os_strcmp(token, "WiFiMode")==0) {
 		x=wifi_get_opmode();
-		if (x==1) os_strcpy(buff, "Client (AP)");
+		if (x==1) os_strcpy(buff, "Station");
 		if (x==2) os_strcpy(buff, "SoftAP");
 		if (x==3) os_strcpy(buff, "STA+AP");
 	} else if (os_strcmp(token, "currSsid")==0) {

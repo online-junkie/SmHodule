@@ -152,7 +152,7 @@ if ( str.value.substring(0,1)=="ÿ" ) { str.value="8080"; }
 str = document.getElementById("IP");
 if ( str.value.substring(0,1)=="ÿ" ) { str.value=""; }
 str = document.getElementById("PORT");
-if ( str.value.substring(0,1)=="ÿ" ) { str.value="8080"; }
+if ( str.value.substring(0,1)=="ÿ" ) { str.value="80"; }
 </script><!--<tr><td>SSL:</td>
 <td colspan=3>
 <div class="radio-toolbar">

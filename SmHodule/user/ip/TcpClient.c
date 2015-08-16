@@ -10,7 +10,6 @@
 char data[1024] = { 0 };
 espConnectionType singleConnection;
 static ip_addr_t host_ip;
-static int callbackCntr;
 
 tcp_send_cb ptr_send;
 
@@ -35,19 +34,7 @@ static void ICACHE_FLASH_ATTR TcpClient_Receive(void *arg, char *pdata, unsigned
 static void ICACHE_FLASH_ATTR
 TcpClient_Send_Cb(void *arg) {
   struct espconn *pespconn = (struct espconn *)arg;
-  os_printf("Send, disconnects missed: %d\r\n",callbackCntr++);
-  os_printf("heap: %u\r\n",system_get_free_heap_size());
-  static struct espconn *lastpespconn;
-  if ( callbackCntr > 1 ) {
-		os_free(lastpespconn->proto.tcp);
-		os_free(lastpespconn);
-		#ifdef PLATFORM_DEBUG
-		os_printf("freeing up heap: %u\r\n",system_get_free_heap_size());
-		#endif
-		callbackCntr--;
-	}
-	espconn_disconnect(pespconn);
-    lastpespconn = pespconn;
+//  espconn_disconnect(pespconn);
 }
 
 /**
@@ -60,7 +47,6 @@ TcpClient_Disconnect_Cb(void *arg) {
   struct espconn *pespconn = (struct espconn *)arg;
   at_linkConType *linkTemp = (at_linkConType *)pespconn->reverse;
   os_printf("disconnect_cb \r\n");
-  callbackCntr--;
   if(pespconn == NULL)  {
     return;
   }
