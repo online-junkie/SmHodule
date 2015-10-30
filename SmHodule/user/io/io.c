@@ -57,10 +57,10 @@ static void ICACHE_FLASH_ATTR resetBtnUpTimerCb(void *arg) {
 		os_printf("UP Cnt: %d\n", resetCnt);
 	} else {
 		if (resetCnt>=3 ) { //>200msec pressed
-			sendKeyData(2,resetCnt); // long
+			sendKeyData(2,resetCnt,1); // long
 			os_printf("Key UP pressed long\n");
 		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
-			sendKeyData(2,0); //short
+			sendKeyData(2,0,1); //short
 			os_printf("Key UP pressed short\n");
 		}
 		resetCnt=0;
@@ -77,10 +77,10 @@ static void ICACHE_FLASH_ATTR resetBtnLeftTimerCb(void *arg) {
 			setup_wifi_ap_mode();
 			initSetupData();
 		} else if (resetCnt>=3 && resetCnt<=40) { //<8 sec pressed
-			sendKeyData(4,resetCnt); // long
+			sendKeyData(4,resetCnt,2); // long
 			os_printf("Key Left pressed long\n");
 		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
-			sendKeyData(4,0); //short
+			sendKeyData(4,0,2); //short
 			os_printf("Key Left pressed short\n");
 		}
 		resetCnt=0;
@@ -94,10 +94,10 @@ static void ICACHE_FLASH_ATTR resetBtnRightTimerCb(void *arg) {
 		os_printf("Right cnt: %d\n", resetCnt);
 	} else {
 		if (resetCnt>=3) { //>200msec pressed
-			sendKeyData(3,resetCnt); // long
+			sendKeyData(3,resetCnt,3); // long
 			os_printf("Key RIGHT pressed long\n");
 		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200msec pressed
-			sendKeyData(3,0); //short
+			sendKeyData(3,0,3); //short
 			os_printf("Key RIGHT pressed short\n");
 		}
 		resetCnt=0;
@@ -111,10 +111,10 @@ static void ICACHE_FLASH_ATTR resetBtnDwnTimerCb(void *arg) {
 		os_printf("DOWN resetCnt: %d\n", resetCnt);
 	} else {
 		if (resetCnt>=3) { //>=200msec pressed
-			sendKeyData(1,resetCnt); // long
+			sendKeyData(1,resetCnt,0); // long
 			os_printf("Key DOWN pressed long\n");
 		} else if (resetCnt>=1 && resetCnt <=2 ) { //<200 msec pressed
-			sendKeyData(1,0); //short
+			sendKeyData(1,0,0); //short
 			os_printf("Key DOWN pressed short\n");
 		}
 		resetCnt=0;

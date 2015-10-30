@@ -19,7 +19,10 @@
 //#include "mqtt/mqtt.h"
 
 #define FLASHSECTOR 0x3A
+#define FLASHSECTOROLED 0x3C
 SETUPDATA Setup;
+OLEDDATA Oled;
+
 char payload[1024];
 
 //MQTT_Client mqttClient;
@@ -88,14 +91,14 @@ void ICACHE_FLASH_ATTR sendStatus(int i) {
 	//}
 }
 //send data to switch
-void ICACHE_FLASH_ATTR sendKeyData(int i, int j) {
+void ICACHE_FLASH_ATTR sendKeyData(int key, int duration, int mode) {
 
 	char payload[1024];
 	int id;
 	static int lastvalue[10] = {0,0,0,0,0,0,0,0,0,0};
-	lastvalue[i] = ( lastvalue[i] ) ? 0 : 1;
-	lastvalue[i+1] = j;
-	os_sprintf(payload, "GET /api/set?switch=1&toggle=%d&key=%d&duration=%d HTTP/1.0\r\nHost:",lastvalue[i],i,lastvalue[i+1]);
+	lastvalue[key] = ( lastvalue[key] ) ? 0 : 1;
+	lastvalue[key+1] = duration;
+	os_sprintf(payload, "GET /api/set?switch=1&key=%d&duration=%d&mode=%d HTTP/1.0\r\nHost:",lastvalue[key],key,lastvalue[key+1],mode);
 //	if ( blocked == 0 ) {
     	ETS_GPIO_INTR_DISABLE();
     		if ( os_strlen(Setup.AIP) > 0 ) {
@@ -273,3 +276,25 @@ void mqtt_init(void)
 
 }
 */
+
+void writeOLed(int line, char *message) {
+
+};
+
+
+void getOLedData() {
+	spi_flash_read((SPI_FLASH_SEC_SIZE * FLASHSECTOROLED), (uint32 *)&Oled, sizeof(OLEDDATA));
+};
+
+
+void saveOLedData() {
+	os_timer_disarm(&smhodule_timer);
+	os_printf("saving OLED config to flash\n");
+	ETS_GPIO_INTR_DISABLE();
+	ETS_UART_INTR_DISABLE();
+	spi_flash_erase_sector(FLASHSECTOROLED);
+	spi_flash_write((SPI_FLASH_SEC_SIZE * FLASHSECTOROLED), (uint32 *)&Oled, sizeof(OLEDDATA));
+	ETS_UART_INTR_ENABLE();
+	ETS_GPIO_INTR_ENABLE();
+	os_timer_arm(&smhodule_timer, (seconds * 1000), 1);
+}
