@@ -29,13 +29,19 @@ typedef struct {
 	uint8_t pad[2];   // pad to 4 byte boundary
 } SETUPDATA;
 
+typedef struct {
+	uint8_t Line1[4][8]; // 4 line 8 characters
+	// mind to use 4byte chunks
+} OLEDDATA;
+
 extern SETUPDATA Setup;
+extern OLEDDATA OLed;
 
 static ETSTimer smhodule_timer;
 static int seconds = 10;
 
 static void sendData(void *arg);
-void sendKeyData(int i, int j);
+void sendKeyData(int key, int duration, int mode);
 void smhoduleInit (void );
 void initSetupData( void );
 void getSetupData();
@@ -44,6 +50,8 @@ void resetPermMode( void );
 //void blockSmhodule(void);
 //void unblockSmhodule(void);
 void sendStatus(int i);
-
+void writeOLed(int line, char *message);
+void saveOLedData();
+void getOLedData();
 //void mqtt_init(void);
 #endif

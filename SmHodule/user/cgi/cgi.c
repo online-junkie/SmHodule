@@ -33,6 +33,8 @@ int ICACHE_FLASH_ATTR cgiApi(HttpdConnData *connData) {
 	char value[10];
 	char set[20];
 	char key[20];
+	char duration[20];
+	char mode[20];
 	if (connData->conn==NULL) {
 			//Connection aborted. Clean up.
 			return HTTPD_CGI_DONE;
@@ -40,6 +42,8 @@ int ICACHE_FLASH_ATTR cgiApi(HttpdConnData *connData) {
 
 	httpdFindArg(connData->getArgs, "switch", set, sizeof(set));
 	httpdFindArg(connData->getArgs, "key", key, sizeof(key));
+	httpdFindArg(connData->getArgs, "duration", duration, sizeof(duration));
+	httpdFindArg(connData->getArgs, "mode", mode, sizeof(mode));
 
 	if ( atoi(key) == 1) {
 		if ( gpio16_input_get() ) {
